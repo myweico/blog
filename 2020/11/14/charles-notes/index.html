@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"myweico.github.io","root":"/blog/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="CharlesCharles 是一个抓包软件，能够抓取电脑以及手机上的 http&#x2F;https 的网络包，对于我们调试接口来说，十分方便。 Charles 提供的功能：  抓包 修改请求，再次发送 并发、重复发起请求，压力测试 限流，调试弱网情况 修改请求、以及响应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调试神器-Charles抓包工具的使用">
+<meta property="og:url" content="https://myweico.github.io/blog/2020/11/14/charles-notes/index.html">
+<meta property="og:site_name" content="My Wei">
+<meta property="og:description" content="CharlesCharles 是一个抓包软件，能够抓取电脑以及手机上的 http&#x2F;https 的网络包，对于我们调试接口来说，十分方便。 Charles 提供的功能：  抓包 修改请求，再次发送 并发、重复发起请求，压力测试 限流，调试弱网情况 修改请求、以及响应">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114184335.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114184517.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114185032.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114185250.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114185718.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114190842.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114190934.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114191023.png">
+<meta property="article:published_time" content="2020-11-14T17:22:26.000Z">
+<meta property="article:modified_time" content="2020-11-14T15:24:51.685Z">
+<meta property="article:author" content="Weico">
+<meta property="article:tag" content="测试">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114184335.png">
+
+<link rel="canonical" href="https://myweico.github.io/blog/2020/11/14/charles-notes/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>调试神器-Charles抓包工具的使用 | My Wei</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">My Wei</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Go My Wei.</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2020/11/14/charles-notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="Weico">
+      <meta itemprop="description" content="This is the blog belong to Weico.Here will share Weico's technology and experience of life.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="My Wei">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          调试神器-Charles抓包工具的使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-14 17:22:26 / 修改时间：15:24:51" itemprop="dateCreated datePublished" datetime="2020-11-14T17:22:26+00:00">2020-11-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Charles"><a href="#Charles" class="headerlink" title="Charles"></a>Charles</h2><p>Charles 是一个抓包软件，能够抓取电脑以及手机上的 http/https 的网络包，对于我们调试接口来说，十分方便。</p>
+<p>Charles 提供的功能：</p>
+<ul>
+<li>抓包</li>
+<li>修改请求，再次发送</li>
+<li>并发、重复发起请求，压力测试</li>
+<li>限流，调试弱网情况</li>
+<li>修改请求、以及响应</li>
+</ul>
+<a id="more"></a>
+
+<p>charles 的原理是，启动一个代理服务器，让请求包都经过 charles 启动的代理服务器，然后再请求对应的 url。</p>
+<h2 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h2><h3 id="启动-charles-的-http-代理服务"><a href="#启动-charles-的-http-代理服务" class="headerlink" title="启动 charles 的 http 代理服务"></a>启动 charles 的 http 代理服务</h3><ol>
+<li><p>charles 菜单栏 <code>proxy</code> - <code>proxy-setting</code><br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114184335.png" alt=""></p>
+</li>
+<li><p>启动 charles 的代理服务器，并设置端口（此处设置为 9999）<br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114184517.png" alt=""></p>
+</li>
+</ol>
+<h3 id="Mac-上的代理"><a href="#Mac-上的代理" class="headerlink" title="Mac 上的代理"></a>Mac 上的代理</h3><ol>
+<li>菜单栏上 <code>proxy</code> - <code>Mac Proxy</code> ，启动 Mac 上的代理</li>
+</ol>
+<p>这时候 Mac 上的 http 请求已经可以正常抓取到了，但是 https 还是一堆乱码甚至无法访问，因为没有还没有安装 charles 的安全证书</p>
+<ol start="2">
+<li>安装 charles 的安装证书，点击 charles 菜单栏 - <code>help</code> - <code>SSL Proxying</code> - <code>Install Charles Root Certificate</code><br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114185032.png" alt=""></li>
+</ol>
+<p>安装证书<br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114185250.png" alt=""></p>
+<p>在钥匙串里面搜索到 charles 的证书 - 双击 - 在 trust 下面 设置为 <code>always trust</code><br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114185718.png" alt=""></p>
+<ol start="3">
+<li>这时候 Mac 上的 http 以及 https 的网络包都可以正常抓取了</li>
+</ol>
+<h3 id="ios-上的代理（安卓同理）"><a href="#ios-上的代理（安卓同理）" class="headerlink" title="ios 上的代理（安卓同理）"></a>ios 上的代理（安卓同理）</h3><ol>
+<li>手机连上 Mac 同局域网下的 wifi，将 wifi 的代理设置为 charles 的代理服务即可</li>
+</ol>
+<p><code>wifi</code> - 点击与 Mac 同样的 wifi - 滚动到最后，<code>配置代理</code> - 设置为手动 - 代理服务器写 Mac 的 ip 地址（charles 菜单栏 - help - Local IP Address 可以获取） - 端口写 charles 的代理端口（这里是 9999）<br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114190842.png" style="height:600px; margin: 0 auto;" /></p>
+<ol start="2">
+<li><p>手机上安装证书，charles 菜单栏 <code>help</code> - <code>SSL Proxying</code> - 选择在手机上安装证书`</p>
+<img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114190934.png" style="margin: 0 auto;" />
+</li>
+<li><p>手机浏览器访问对话框指定的 url，下载证书（这里是<code>chls.pro/ssl</code>)</p>
+<img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20201114191023.png" style="margin: 0 auto;" />
+</li>
+<li><p>下载完成后，打开手机设置 - <code>通用</code> - 滑到最后，选择<code>描述文件</code> - 安装刚下载的证书</p>
+</li>
+<li><p>然后回到 <code>通用</code> - 滑到最前，选择<code>关于本机</code> - 然后滑到最后，选择<code>证书信任设置</code> - 选择信任刚刚安装好的证书</p>
+</li>
+<li><p>这时候手机上 http 以及 https 的网络包已经可以正常抓取了（调试完毕后记得关掉代理，否则会无法上网，为了安全，可将证书暂时设置为不信任，调试的时候再信任即可）</p>
+</li>
+</ol>
+<h2 id="筛选"><a href="#筛选" class="headerlink" title="筛选"></a>筛选</h2><p>网络请求过多，不易找到我们想要监听的网络包，可以使用一下方法：</p>
+<ul>
+<li>搜索：<code>edit</code> - <code>find</code> 或者 <code>Command + F</code>快捷键筛选</li>
+<li>设置 filter</li>
+<li>将要监听的 url 设置为 focus</li>
+<li>设置监听选项：<code>Proxy</code> - <code>Recording Settings</code>里面配置 include 或者 exclude</li>
+</ul>
+<h2 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h2><p>在 <code>Proxy</code> -  Throttle` 可以限流，模拟各种网络请求速度，这对于我们模拟弱网条件十分有用</p>
+<h2 id="编辑请求，重新发送请求"><a href="#编辑请求，重新发送请求" class="headerlink" title="编辑请求，重新发送请求"></a>编辑请求，重新发送请求</h2><ul>
+<li>compose：编辑请求的内容，再次发送请求，这在测试接口的时候就非常有用</li>
+<li>repeat：再次发送请求</li>
+<li>repeat advance: 可以设置请求次数，并发数，可用于压测</li>
+</ul>
+<h2 id="修改响应"><a href="#修改响应" class="headerlink" title="修改响应"></a>修改响应</h2><ul>
+<li>Map Remote: 将指定url映射到指定url，在调试微信支付域名校验的时候十分有用，可以将正式服的域名映射到测试服中，调试测试服</li>
+<li>Map Local: 将响应映射到本地文件</li>
+<li>Map Rewrite: 将匹配到的内容重写为指定内容，（可正则匹配）</li>
+<li>BreakPoint: 设置请求的断点，可单个调试请求，修改请求和响应</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/%E6%B5%8B%E8%AF%95/" rel="tag"># 测试</a>
+              <a href="/blog/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2020/07/05/front-end-modules-summary/" rel="prev" title="前端模块化-CommonJS、AMD、UMD以及ESM">
+      <i class="fa fa-chevron-left"></i> 前端模块化-CommonJS、AMD、UMD以及ESM
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Charles"><span class="nav-number">1.</span> <span class="nav-text">Charles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抓包"><span class="nav-number">2.</span> <span class="nav-text">抓包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动-charles-的-http-代理服务"><span class="nav-number">2.1.</span> <span class="nav-text">启动 charles 的 http 代理服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mac-上的代理"><span class="nav-number">2.2.</span> <span class="nav-text">Mac 上的代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ios-上的代理（安卓同理）"><span class="nav-number">2.3.</span> <span class="nav-text">ios 上的代理（安卓同理）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#筛选"><span class="nav-number">3.</span> <span class="nav-text">筛选</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#限流"><span class="nav-number">4.</span> <span class="nav-text">限流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑请求，重新发送请求"><span class="nav-number">5.</span> <span class="nav-text">编辑请求，重新发送请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改响应"><span class="nav-number">6.</span> <span class="nav-text">修改响应</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Weico</p>
+  <div class="site-description" itemprop="description">This is the blog belong to Weico.Here will share Weico's technology and experience of life.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Weico</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
