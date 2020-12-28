@@ -274,3 +274,23 @@ console.log(myTrim("  ok   ").length);
 let str = "   ok  ";
 console.log(str.trim());
 ```
+## 字符串全排列
+### 广度优先实现
+```js
+function combine(str) {
+  if (str.length === 1) {return [str]};
+
+  const result = [];
+
+  // 取一个字符出来，剩下的继续全排列
+  for (let i in str) {
+    let char = str[i];
+    let leftCombined = combine(slice(0, i) + slice(i + 1));
+    result.concat(leftCombined.map(function(s) {
+      return char + s;
+    }))
+  }
+
+  return [...new Set(result)];
+}
+```
