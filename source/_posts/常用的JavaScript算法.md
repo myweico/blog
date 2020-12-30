@@ -291,7 +291,6 @@ function combine(str) {
     // 遍历
     let char = str[i];
     let leftCombined = combine(str.slice(0, i) + str.slice(i + 1));
-    console.log("leftCombined", leftCombined);
     const arrCombined = leftCombined.map(function (s) {
       return char + s;
     });
