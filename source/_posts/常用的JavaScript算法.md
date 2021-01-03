@@ -303,3 +303,53 @@ function combine(str) {
 console.log("combine(abc)", combine("abc"));
 console.log("combine(aab)", combine("aab"));
 ```
+
+## 节流和防抖
+
+codepen 实例，请点击 => [https://codepen.io/WeicoMY/pen/OJRvPPj](https://codepen.io/WeicoMY/pen/OJRvPPj)
+
+### 防抖
+
+防抖就是防止抖动，事件持续时间内触发的话只会触发最后一次
+
+```js
+function debounce(fn, interval, context) {
+  // 设置标志位
+  let timeId = undefined;
+
+  // 返回一个函数
+  return (...args) => {
+    // 一段时间内再次触发的话，取消上次事件
+    if (timeId) {
+      clearTimeout(timeId);
+      timeId = undefined;
+    }
+
+    // 设置若干秒后执行
+    timeId = setTimeout(() => {
+      fn.apply(context, args);
+    }, interval);
+  };
+}
+```
+
+### 节流
+
+节流，节省流量，限制触发的频率，限制一段时间内触发的次数
+
+```js
+function throttle(fn, interval, context) {
+  // 设置标志位
+  let isBusy = false;
+
+  // 返回一个函数
+  return (...args) => {
+    if (isBusy) return;
+    isBusy = true;
+    fn.apply(context, args);
+    setTimeout(() => {
+      isBusy = false;
+    }, interval);
+  };
+}
+```
