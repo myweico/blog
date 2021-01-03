@@ -278,25 +278,43 @@ console.log(str.trim());
 ## 字符串全排列
 
 ### 广度优先实现
-
 ```js
 function combine(str) {
   if (str.length === 1) {
     return [str];
   }
 
-  let result = [];
-
+  const result = [];
   for (let i = 0; i < str.length; i++) {
-    // 遍历
-    let char = str[i];
-    let leftCombined = combine(str.slice(0, i) + str.slice(i + 1));
-    const arrCombined = leftCombined.map(function (s) {
-      return char + s;
-    });
-    result = result.concat(arrCombined);
+    const curChar = str[i];
+    const combineArr = combine(str.slice(0, i) + str.slice(i + 1));
+    for (let j = 0; j < combineArr.length; j++) {
+      result.push(curChar + combineArr[j]);
+    }
   }
+  // 避免出现 [aa, aa, aa, aa] 的情况
+  return [...new Set(result)];
+}
 
+console.log("combine(abc)", combine("abc"));
+console.log("combine(aab)", combine("aab"));
+```
+
+### 深度优先实现
+
+```js
+function combine(str) {
+  const result = [];
+  (function _combine(str, path = "") {
+    if (str.length === 0) {
+      return result.push(path + str);
+    }
+
+    for (let i = 0; i < str.length; i++) {
+      _combine(str.slice(0, i) + str.slice(i + 1), path + str[i]);
+    }
+  })(str);
+  // 去重，避免出现'aa' => [aa, aa] 的情况
   return [...new Set(result)];
 }
 
