@@ -278,6 +278,7 @@ console.log(str.trim());
 ## 字符串全排列
 
 ### 广度优先实现
+
 ```js
 function combine(str) {
   if (str.length === 1) {
@@ -320,6 +321,98 @@ function combine(str) {
 
 console.log("combine(abc)", combine("abc"));
 console.log("combine(aab)", combine("aab"));
+```
+
+## 排序和查找
+
+### 插入排序
+
+```js
+function sortInsert(arr) {
+  // 遍历每一项
+  for (let i = 1; i < arr.length; i++) {
+    for (let j = i; j >= 0; j--) {
+      if (arr[j] < arr[j - 1]) {
+        // 比前面的元素小，则交换位置
+        [arr[j - 1], arr[j]] = [arr[j], arr[j - 1]];
+      } else {
+        // 已经到合适位置，停止向前比较
+        break;
+      }
+    }
+  }
+
+  return arr;
+}
+
+console.log(sortInsert([2, 5, 1, 2, 5, 61, 21]));
+```
+
+### 归并排序
+
+并归排序就是将数组分隔成小组，对小组进行排序，等小组有序后，再将有序的小组合并成有序的大组，对数组递归使用并归排序，最终就会得到一个有序的数组
+
+```js
+function sortMerge(arr) {
+  if (arr.length === 1) {
+    // 只有一个数组的时候直接返回
+    return arr;
+  }
+
+  // 中间的索引，将数组
+  const indexMid = ~~(arr.length / 2);
+
+  // 对数组进行分隔，进行并归排序，得到有序的数组
+  const [part1, part2] = [
+    sortMerge(arr.slice(0, indexMid)),
+    sortMerge(arr.slice(indexMid)),
+  ];
+
+  console.log("part", part1, part2);
+
+  // 对有序的数组进行合并
+  let result = [];
+
+  while (part1.length > 0 && part2.length > 0) {
+    result.push(part1[0] < part2[0] ? part1.shift() : part2.shift());
+  }
+
+  result = [...result, ...part1, ...part2];
+
+  return result;
+}
+
+console.log(sortMerge([2, 5, 1, 2, 5, 61, 21]));
+```
+
+### 快速排序
+
+选取一个数值作为参考值，数组其他值与其比较，比它小的在其左侧，比它大的在其右侧，这样这个参考值在数组中的位置就确定了，然后继续递归对左右的数组进行快速排序，最后就会得到一个有序的数组
+
+```js
+function sortQuickly(arr) {
+  if (arr.length === 0) return [];
+
+  const indexMid = Math.floor(arr.length / 2);
+  let arrLeft = [];
+  let arrRight = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (i === indexMid) continue;
+    if (arr[i] < arr[indexMid]) {
+      // 比选取的值小，则放到左侧
+      arrLeft.push(arr[i]);
+    } else {
+      // 大于等于选取的值，放到右侧
+      arrRight.push(arr[i]);
+    }
+  }
+
+  // 递归对左右的数组进行递归快速排序
+  return [...sortQuickly(arrLeft), arr[indexMid], ...sortQuickly(arrRight)];
+}
+
+console.log(sortQuickly([2, 5, 1, 2, 5, 61, 21]));
 ```
 
 ## 节流和防抖
