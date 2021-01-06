@@ -415,6 +415,88 @@ function sortQuickly(arr) {
 console.log(sortQuickly([2, 5, 1, 2, 5, 61, 21]));
 ```
 
+### 二位查找
+
+```js
+function binarySearch(arr, target) {
+  if (arr.length === 0 || (arr.length === 1 && arr[0] !== target)) {
+    // 数组已经没有可以比较的时候 || 最后一个元素与目标元素找不到的时候 => 元素不存在
+    return -1;
+  }
+
+  // 寻找中间的值作为参考值
+  const indexMid = arr.length >> 1;
+  const valueMid = arr[indexMid];
+
+  // 比较，所等于，则找到了， 目标值若小于参考值，则在左侧的数中继续二分查找，目标值若大于参考值，则取右侧数中二分查找
+  if (valueMid === target) {
+    return indexMid;
+  } else if (target < valueMid) {
+    return binarySearch(arr.slice(0, indexMid - 1), target);
+  } else {
+    return indexMid + 1 + binarySearch(arr.slice(indexMid + 1), target);
+  }
+}
+
+console.log(binarySearch([1, 2, 3, 6, 9, 11, 28, 42, 81, 98], 81));
+```
+
+另一种写法
+
+```js
+function binarySearch(arr, target) {
+  let indexLeft = 0,
+    indexRight = arr.length;
+
+  while (indexLeft <= indexLeft) {
+    const indexMid = (indexLeft + indexRight) >> 1;
+    const valueMid = arr[indexMid];
+    if (target === valueMid) {
+      return indexMid;
+    } else if (target < valueMid) {
+      indexRight = indexMid - 1;
+    } else {
+      indexLeft = indexMid + 1;
+    }
+  }
+  return -1;
+}
+
+console.log(binarySearch([1, 2, 3, 6, 9, 11, 28, 42, 81, 98], 81));
+```
+
+### 查找出现得最多的元素
+
+```js
+function getMost(arr) {
+  // 新建一个map，键值作为map的键名，键值为出现的次数
+  let map = new Map();
+  arr.forEach((item) => {
+    if (map.has(item)) {
+      // 若 map 中存在，则次数加 1
+      map.set(item, map.get(item) + 1);
+    } else {
+      // 不存在，则初始化为 1
+      map.set(item, 1);
+    }
+  });
+
+  // 统计完后，取出出现次数最多的键名，就是出现得最多的元素
+  let [maxCount, maxValues] = [map.get(arr[0]), [arr[0]]];
+  map.forEach((count, value) => {
+    if (count > maxCount) {
+      maxCount = count;
+      maxValues = [value];
+    } else if (count === maxCount) {
+      maxValues.push(value);
+    }
+  });
+
+  return maxValues;
+}
+console.log(getMost(['1', '2', '3', '3', '55', '3', '55', '55', '12', '12']))
+```
+
 ## 节流和防抖
 
 codepen 实例，请点击 => [https://codepen.io/WeicoMY/pen/OJRvPPj](https://codepen.io/WeicoMY/pen/OJRvPPj)
