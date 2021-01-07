@@ -494,7 +494,34 @@ function getMost(arr) {
 
   return maxValues;
 }
-console.log(getMost(['1', '2', '3', '3', '55', '3', '55', '55', '12', '12']))
+console.log(getMost(["1", "2", "3", "3", "55", "3", "55", "55", "12", "12"]));
+```
+
+## 功能函数
+
+### 使用 setTimeout 实现 setInterval
+
+```js
+// 需要返回 id 可以停止定时器
+function myInterval(fn, interval, ...args) {
+  let isContinuous = true;
+  (function _interval() {
+    setTimeout(() => {
+      fn.apply(this, args);
+      if (isContinuous) {
+        _interval(fn, interval, ...args);
+      }
+    }, interval);
+  })();
+
+  return () => {
+    isContinuous = false;
+  };
+}
+
+const stop = myInterval(() => {
+  console.log("going on");
+}, 1000);
 ```
 
 ## 节流和防抖
