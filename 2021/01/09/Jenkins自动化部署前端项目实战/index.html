@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"myweico.github.io","root":"/blog/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在早期，我部署项目的过程是，现在本地打好包，然后连同 dist 文件夹一起推到 gitlab 上面，然后再登录到服务器上拉取。简单的项目还好，但是若有好几个前端项目，然后项目又分开发、测试、正式环境，那前面的过程就要重复很多遍，效率很低过程也很繁琐。 因此，就尝试了使用 Jenkins 自动化部署前端项目。弄好了之后，发现真香！效率大大提高，解放双手！舒服！下面记录了我从0到1的过程，还没自动化部">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jenkins自动化部署前端项目实战">
+<meta property="og:url" content="https://myweico.github.io/blog/2021/01/09/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="My Wei 的博客">
+<meta property="og:description" content="在早期，我部署项目的过程是，现在本地打好包，然后连同 dist 文件夹一起推到 gitlab 上面，然后再登录到服务器上拉取。简单的项目还好，但是若有好几个前端项目，然后项目又分开发、测试、正式环境，那前面的过程就要重复很多遍，效率很低过程也很繁琐。 因此，就尝试了使用 Jenkins 自动化部署前端项目。弄好了之后，发现真香！效率大大提高，解放双手！舒服！下面记录了我从0到1的过程，还没自动化部">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110143724.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110161701.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110162206.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110162623.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110145042.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110154401.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110152059.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110152859.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110163103.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110165444.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110172541.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110172826.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110175221.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110174439.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110175555.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110180522.png">
+<meta property="article:published_time" content="2021-01-09T12:03:53.000Z">
+<meta property="article:modified_time" content="2021-01-10T11:31:02.637Z">
+<meta property="article:author" content="My Wei">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="前端工程化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110143724.png">
+
+<link rel="canonical" href="https://myweico.github.io/blog/2021/01/09/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Jenkins自动化部署前端项目实战 | My Wei 的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">My Wei 的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">享受共同成长的过程。</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/01/09/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="My Wei">
+      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="My Wei 的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Jenkins自动化部署前端项目实战
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-09 12:03:53" itemprop="dateCreated datePublished" datetime="2021-01-09T12:03:53+00:00">2021-01-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-01-10 11:31:02" itemprop="dateModified" datetime="2021-01-10T11:31:02+00:00">2021-01-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在早期，我部署项目的过程是，现在本地打好包，然后连同 dist 文件夹一起推到 gitlab 上面，然后再登录到服务器上拉取。简单的项目还好，但是若有好几个前端项目，然后项目又分开发、测试、正式环境，那前面的过程就要重复很多遍，效率很低过程也很繁琐。</p>
+<p>因此，就尝试了使用 Jenkins 自动化部署前端项目。弄好了之后，发现真香！效率大大提高，解放双手！舒服！下面记录了我从0到1的过程，还没自动化部署的伙伴们，赶紧试一试！</p>
+<a id="more"></a>
+<h2 id="自动化部署方案"><a href="#自动化部署方案" class="headerlink" title="自动化部署方案"></a>自动化部署方案</h2><p>我的自动化部署方案是</p>
+<ul>
+<li>所有 dev 分支的更新都会自动触发 Jenkins 构建，自动部署到测试服务器</li>
+<li>master的更新，需要到 Jenkins 手动点击构建后，才会自动构建部署到正式服务器</li>
+<li>Jenkins 可以选择 tag 或者分支进行构建，以便出现问题回滚</li>
+<li>Jenkins 自动部署到服务器，会将 dist 保存备份，出现问题可以选择对应的备份包回滚</li>
+<li>Jenkins 打包的进行状态、打包时间、打包结果都通过钉钉群通知成员</li>
+</ul>
+<h2 id="Jenkin的安装"><a href="#Jenkin的安装" class="headerlink" title="Jenkin的安装"></a>Jenkin的安装</h2><p>这里我主要是基于 docker 安装 jenkins，其他的安装方式可以自行查看<a href="https://www.jenkins.io/zh/doc/book/installing/" target="_blank" rel="noopener">官方文档</a>。</p>
+<p>环境：</p>
+<ul>
+<li>系统：<code>centos 8.0</code></li>
+<li>docker 版本：<code>20.10.2</code></li>
+<li>docker 镜像：<code>jenkinsci/blueocean</code></li>
+</ul>
+<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>搜索镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search jenkins</span><br></pre></td></tr></table></figure>
+<p>docker 官方的 jenkins 镜像太老了，很多plugins都无法使用，这里使用官网文档推荐的 <code>jenkinsci/blueocean</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull jenkinsci&#x2F;blueocean</span><br></pre></td></tr></table></figure>
+<h3 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h3><p>首先创建一个目录专门存放 jenkins 相关数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;opt&#x2F;jenkins</span><br></pre></td></tr></table></figure>
+<p>实例化容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -u root --restart&#x3D;always -d -p 8081:8080 -p 8082:50000 -v &#x2F;opt&#x2F;jenkins:&#x2F;var&#x2F;jenkins_home -v &#x2F;var&#x2F;run&#x2F;docker.sock:&#x2F;var&#x2F;run&#x2F;docker.sock jenkinsci&#x2F;blueocean</span><br></pre></td></tr></table></figure>
+
+<h2 id="Jenkins-初始化"><a href="#Jenkins-初始化" class="headerlink" title="Jenkins 初始化"></a>Jenkins 初始化</h2><p>Jenkins 容器创建完毕后，就可以登录8081端口登录了</p>
+<p>登录的时候会叫你输入初始密码，密码的位置可以通过创建容器映射的目录获取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;opt&#x2F;jenkins&#x2F;secrets&#x2F;initialAdminPassword</span><br></pre></td></tr></table></figure>
+<p>后续还会引导设置admin用户以及安装推荐的插件</p>
+<h2 id="Jenkins-插件配置"><a href="#Jenkins-插件配置" class="headerlink" title="Jenkins 插件配置"></a>Jenkins 插件配置</h2><p>本次前端自动化部署需要安装以下插件：</p>
+<ul>
+<li><code>nodejs</code>：在 jenkins 里面安装 nodejs 环境，用于项目打包</li>
+<li><code>Git Parameter Plugin-In</code>：用于让项目可以根据 tag 或者 branch 进行构建</li>
+<li><code>GitLab</code>：可以设置Gitlab等配置，拉取gitlab的代码、通过gitlab的webhook触发 Jenkins 构建等</li>
+<li><code>Publish Over SSH</code>：用于将 Jenkins 打包好的 dist 文件夹传送到服务器</li>
+<li><code>DingTalk</code>：设置钉钉的机器人，在钉钉群通知 Jenkins 的打包状态</li>
+</ul>
+<p>安装步骤：</p>
+<ol>
+<li>点击首页左侧菜单的 <code>Manage Jenkins</code></li>
+<li>选择 <code>Manage Plugins</code></li>
+<li>点击 Tab - <code>Available</code></li>
+<li>在搜索框搜索对应的插件</li>
+<li>选中插件，然后点击<code>Intall without restart</code>，等待安装成功即可</li>
+</ol>
+<h3 id="Nodejs-插件配置"><a href="#Nodejs-插件配置" class="headerlink" title="Nodejs 插件配置"></a>Nodejs 插件配置</h3><p>点击首页的 <code>Manage Jenkins</code></p>
+<p>然后选择 <code>Global Tool Configuration</code></p>
+<p>滑动到下面 NodeJS 栏目，点击添加 NodeJS</p>
+<p>最好添加一个跟服务器版本一致的 NodeJS 版本，避免因为版本差异出现的问题，这里选择的是 <code>10.15.0</code></p>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110143724.png" alt=""></p>
+<h3 id="Gitlab-配置"><a href="#Gitlab-配置" class="headerlink" title="Gitlab 配置"></a>Gitlab 配置</h3><p>点击首页的 <code>Manage Jenkins</code>，点击 <code>Configure System</code>，查找到 gitlab 配置项</p>
+<p>设置：</p>
+<ul>
+<li>Connection Name：Gitlab 连接的名字，随便填</li>
+<li>Gitlab host URL：Gitlab 的URL，（若 Jenkins 和 Gitlab 在同一个内网内，可以填写内网地址，这样不走外网，拉取速度会快很多！）</li>
+<li>Credentials：安全验证，选择可以连接到gitlab的验证方式，一开始没有的话可以点击旁边的添加，添加一个安全验证</li>
+</ul>
+<p>连接到Gitlab的安全验证的添加：</p>
+<ul>
+<li>这里类型选择了 <code>Gitlab API Token</code>（自己也可以选择密钥等其他类型）</li>
+<li>登录到 gitlab，进入到用户设置，选择 <code>Access Setting</code>，设置名字、过期时间、权限，点击创建即可获得权限token<br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110161701.png" alt=""></li>
+<li>在 Jenkins 的<code>Add Credentials</code>页面中的<code>API token</code>填写刚刚 Gitlab 生成的 token<br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110162206.png" alt=""></li>
+</ul>
+<p>添加完信息后，即可点击下面 <code>Test Connection</code>，若出现 Success 则说明配置成功<br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110162623.png" alt=""></p>
+<h3 id="Publish-Over-SSH-插件配置"><a href="#Publish-Over-SSH-插件配置" class="headerlink" title="Publish Over SSH 插件配置"></a>Publish Over SSH 插件配置</h3><p>设置步骤：</p>
+<ul>
+<li>点击首页主菜单的 <code>Manage Jenkins</code></li>
+<li>点击 <code>Configure System</code></li>
+<li>设置 <code>Publish over SSH</code> 下的栏目</li>
+</ul>
+<p>在下面添加自己想要部署到的 Server，配置项有</p>
+<ul>
+<li><code>Name</code>：Server的名字，用于标识服务器的，可以自己随便起个好听的名字</li>
+<li><code>HostName</code>：Server的ip地址或者域名</li>
+<li><code>Username</code>：ssh 登录的用户名</li>
+<li><code>Remote Directory</code>：服务器的目录，只能部署到这里目录下面（目录需要提前创建）</li>
+<li><code>Passphrase / Password</code>：ssh 登录的密码，这里选择了密码登录，若使用密钥登录，可以设置 <code>Path to key</code> 和 <code>Key</code></li>
+</ul>
+<blockquote>
+<p>若有不懂的地方，可以点击配置右边的问号图标，Jenkins 就会出现对应的提示，十分的友好，点赞！ o(￣▽￣)ｄ</p>
+</blockquote>
+<p>配置完后，可以点击下面的 <code>Test Configuration</code>，若提示 <code>Success</code>，则说明配置成功，若失败了，可以看一下自己是否参数配置错误了</p>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110145042.png" alt=""></p>
+<h3 id="DingTalk-插件配置"><a href="#DingTalk-插件配置" class="headerlink" title="DingTalk 插件配置"></a>DingTalk 插件配置</h3><p>首先在钉钉创建好群，给群添加一个通知机器人</p>
+<blockquote>
+<p>小技巧：可以使用【面对面建群】创建只有自己一个人的群，然后就可以添加私人机器人了</p>
+</blockquote>
+<p>机器人添加步骤：</p>
+<ul>
+<li>点击钉钉PC端头像，选择机器人管理</li>
+<li>选择添加 自定义的机器人</li>
+<li>设置头像、名字、通知的群，加密我这里选择了签名 Singnure（<strong>需要提前记下来签名后面配置插件需要用到</strong>）<br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110154401.png" alt=""></li>
+<li>点击完成后，就会提供对应的 webhook，这个也会用到<br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110152059.png" alt=""></li>
+</ul>
+<p>准备好后，配置 Jenkins 的 DingTalk 插件：</p>
+<ul>
+<li>点击首页菜单的 <code>Manage Jenkins</code></li>
+<li>选择 <code>Configure System</code></li>
+<li>配置钉钉下面的配置项，可以配置通知时机</li>
+<li>点击添加机器人</li>
+</ul>
+<p>钉钉插件的机器人配置项如下：</p>
+<ul>
+<li>id：机器人id，我这里随便填了</li>
+<li>名称：机器人名字，我这里随便填了</li>
+<li>webhook：填写上面创建机器人的 webhook</li>
+<li>关键字：加密方式为关键字的，可以将关键字写在这，因为加密方式我选择了签名，所以我这里空着</li>
+<li>加密：添加创建机器人时候的 Signature</li>
+</ul>
+<p>设置完后，可以点击下面的测试，若钉钉群接受到机器人的通知，则说明配置成功</p>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110152859.png" alt=""></p>
+<h2 id="Jenkin自动化部署前端项目"><a href="#Jenkin自动化部署前端项目" class="headerlink" title="Jenkin自动化部署前端项目"></a>Jenkin自动化部署前端项目</h2><h3 id="添加项目"><a href="#添加项目" class="headerlink" title="添加项目"></a>添加项目</h3><p>点击首页主菜单的 <code>New Item</code>，填写项目名字，选择 <code>Freestyle Project</code>，点击 OK</p>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110163103.png" alt=""></p>
+<h3 id="总体配置（General"><a href="#总体配置（General" class="headerlink" title="总体配置（General)"></a>总体配置（General)</h3><h4 id="设置钉钉通知"><a href="#设置钉钉通知" class="headerlink" title="设置钉钉通知"></a>设置钉钉通知</h4><p>在钉钉机器人栏目下面，选择刚刚添加好的机器人<code>Jenkins通知</code>即可，高级配置里面可以选择 @所有人，配置描述等</p>
+<h4 id="Gitlab-项目配置"><a href="#Gitlab-项目配置" class="headerlink" title="Gitlab 项目配置"></a>Gitlab 项目配置</h4><p>勾选 Github Project，Project Url 填写，要部署项目的Gitlab地址（内网地址可以使用的填写内网指定对应的url,这样拉取回快很多）</p>
+<p>GitLab Connection 填写之前配置好的 Gitlab 连接</p>
+<h4 id="配置项目的构建参数"><a href="#配置项目的构建参数" class="headerlink" title="配置项目的构建参数"></a>配置项目的构建参数</h4><p>勾选 <code>This Project is parameterized</code> - <code>Git Parameter</code><br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110165444.png" alt=""></p>
+<p>Git Parameters 配置如下：</p>
+<ul>
+<li>Name：参数的名称</li>
+<li>Description：变量的描述</li>
+<li>Parameter Type：变量的类型，因为根据分支以及Tag构建，所以这里选择 <code>Brand or Tag</code></li>
+<li>Default Value：变量默认值，这里填写默认进行构建的分支，即 dev</li>
+</ul>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110172541.png" alt=""></p>
+<blockquote>
+<p>注意：还需要后面，将构建的分支设置为该参数变量才生效</p>
+</blockquote>
+<h3 id="源代码管理配置（Source-Code-Management"><a href="#源代码管理配置（Source-Code-Management" class="headerlink" title="源代码管理配置（Source Code Management)"></a>源代码管理配置（Source Code Management)</h3><p><code>Source Code Management</code>，选择 <code>Git</code></p>
+<p>配置参数：</p>
+<ul>
+<li>Repository URL：填写项目的 Url 地址，可选 ssh 地址或者 http 地址（有内网地址最好替换为内网对应的地址）</li>
+<li>Credentials：git 的认证方式，若 url 写的是 ssh 地址，则认证方式为密钥方式，若 url 填写 http 地址，则认证方式需要是 gitlab 账户和密码的方式</li>
+<li>Branches to build：构建的分支，这里填写上面的 <code>BrandAndTag</code> 参数变量</li>
+</ul>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110172826.png" alt=""></p>
+<h3 id="构建触发器配置（Build-Triggers）"><a href="#构建触发器配置（Build-Triggers）" class="headerlink" title="构建触发器配置（Build Triggers）"></a>构建触发器配置（Build Triggers）</h3><p>正式服的构建任务，因为是需要在 Jenkins 手动点击构建才自动构建并部署到正式服务器（这样可避免失误合并到master分支就自动部署到正式环境了），所以可以跳过此步骤</p>
+<p>而测试服的构建任务是需要一旦检测到 dev 分支有更新，就会自动构建部署到测试服，所以这里需要配置 Gitlab 的 webhook 触发 Jenkins 构建</p>
+<p>勾选 <code>Build when a change is pushed to GitLab</code>。<br>其后面有一个有用的参数，即 GitLab webhook URL: <strong>`http://</strong>.<strong>.</strong>.<strong>:8081/project/VueProject`</strong></p>
+<p>可以根据自己的需求进行配置触发的时机</p>
+<p>点击下面的 <code>Advance</code>，里面有一项 <code>Secret token</code>，点击生成，可得到 <strong>token</strong><br><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110175221.png" alt=""></p>
+<h4 id="配置-gitlab-的-webhook"><a href="#配置-gitlab-的-webhook" class="headerlink" title="配置 gitlab 的 webhook"></a>配置 gitlab 的 webhook</h4><p>进入到 gitlab 对应的项目目录，点击 <code>Setting</code> - <code>Webhooks</code></p>
+<p>配置：</p>
+<ul>
+<li>URL：刚刚 Jenkins 给的 webhook url 参数</li>
+<li>Secret Token：刚刚 Jenkins 生成的 <code>Secret Token</code></li>
+<li>Trigger：配置触发的时机</li>
+</ul>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110174439.png" alt=""></p>
+<p>配置完后，点击<code>Add webhook</code>即可，后续可点击 Test 测试是否成功</p>
+<h3 id="构建环境配置（Build-Environment）"><a href="#构建环境配置（Build-Environment）" class="headerlink" title="构建环境配置（Build Environment）"></a>构建环境配置（Build Environment）</h3><p>构建环境使用Node，所以勾选 <code>Provide Node &amp; npm bin/ folder to PATH</code></p>
+<p>选择好之前配置好的 Node 环境即可</p>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110175555.png" alt=""></p>
+<h3 id="构建配置（Build"><a href="#构建配置（Build" class="headerlink" title="构建配置（Build)"></a>构建配置（Build)</h3><p>点击 <code>Add build step</code> - 选择 <code>Execute shell</code></p>
+<!-- ![](https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110175819.png) -->
+
+<p>在 Command 项里面填写打包的命令即可，我的打包命令为</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 设置淘宝镜像源</span></span><br><span class="line">npm i --registry=https://registry.npm.taobao.org</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打包</span></span><br><span class="line">npm run build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 压缩好dist文件夹的内容，准备推送到服务端</span></span><br><span class="line"><span class="built_in">cd</span> ./dist</span><br><span class="line">tar -zcf dist.tar.gz *</span><br><span class="line"><span class="built_in">cd</span> ..</span><br></pre></td></tr></table></figure>
+<p><img src="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210110180522.png" alt=""></p>
+<h3 id="部署到服务端配置（Post-build-Actions"><a href="#部署到服务端配置（Post-build-Actions" class="headerlink" title="部署到服务端配置（Post-build Actions)"></a>部署到服务端配置（Post-build Actions)</h3><p>点击 <code>Add post-build action</code> - 选择 <code>Send build artifacts over SSH</code></p>
+<p>选择想要部署的服务器（可选项就是之前 Publish Over SSH 插件配置好的项目），可以自行添加多台部署服务器</p>
+<p>这里只部署一台，也就是之前配置好的 OtherServer</p>
+<p>配置项有：</p>
+<ul>
+<li><code>Source files</code>：发送到服务端的软件，这里的路径是相对项目中的根目录</li>
+<li><code>Remove prefix</code>：移除的路径，这里移除 dist 路径</li>
+<li><code>Remote directory</code>：发送到的服务端路径（必须要在该服务器配置的Remote Directory下面）</li>
+<li><code>Exec command</code>：发送成功后执行的命令</li>
+</ul>
+<p>我这里的执行命令为：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意，这里当前路径为ssh登录后的路径（默认为用户目录，即 ~/），而不是项目的目录</span></span><br><span class="line"><span class="comment"># 打开项目目录</span></span><br><span class="line"><span class="built_in">cd</span> /mount/release/qw_cms</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除dist文件夹</span></span><br><span class="line">rm -rf ./dist</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建dist文件夹</span></span><br><span class="line">mkdir dist</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压到dist文件夹</span></span><br><span class="line">tar -zxf dist.tar.gz -C dist</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重命名 dist.tar.gz保存记录，以防有错误下解压来实现回滚</span></span><br><span class="line">mv dist.tar.gz `date +%Y%m%d%H%M%S`<span class="variable">$&#123;TAG_NAME&#125;</span>.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># Todo：清除最近10次以外的备份包</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+              <a href="/blog/tags/%E5%89%8D%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%8C%96/" rel="tag"># 前端工程化</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2020/12/26/JavaScirpt%E5%88%A4%E6%96%AD%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/" rel="prev" title="JavaScirpt判断数据类型方法总结">
+      <i class="fa fa-chevron-left"></i> JavaScirpt判断数据类型方法总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2021/01/09/docker%E6%90%AD%E5%BB%BAgitlabi%E8%AE%B0%E5%BD%95/" rel="next" title="docker搭建gitlab记录">
+      docker搭建gitlab记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#自动化部署方案"><span class="nav-number">1.</span> <span class="nav-text">自动化部署方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jenkin的安装"><span class="nav-number">2.</span> <span class="nav-text">Jenkin的安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#拉取镜像"><span class="nav-number">2.1.</span> <span class="nav-text">拉取镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建容器"><span class="nav-number">2.2.</span> <span class="nav-text">创建容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jenkins-初始化"><span class="nav-number">3.</span> <span class="nav-text">Jenkins 初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jenkins-插件配置"><span class="nav-number">4.</span> <span class="nav-text">Jenkins 插件配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nodejs-插件配置"><span class="nav-number">4.1.</span> <span class="nav-text">Nodejs 插件配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gitlab-配置"><span class="nav-number">4.2.</span> <span class="nav-text">Gitlab 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Publish-Over-SSH-插件配置"><span class="nav-number">4.3.</span> <span class="nav-text">Publish Over SSH 插件配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DingTalk-插件配置"><span class="nav-number">4.4.</span> <span class="nav-text">DingTalk 插件配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Jenkin自动化部署前端项目"><span class="nav-number">5.</span> <span class="nav-text">Jenkin自动化部署前端项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加项目"><span class="nav-number">5.1.</span> <span class="nav-text">添加项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体配置（General"><span class="nav-number">5.2.</span> <span class="nav-text">总体配置（General)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设置钉钉通知"><span class="nav-number">5.2.1.</span> <span class="nav-text">设置钉钉通知</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Gitlab-项目配置"><span class="nav-number">5.2.2.</span> <span class="nav-text">Gitlab 项目配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置项目的构建参数"><span class="nav-number">5.2.3.</span> <span class="nav-text">配置项目的构建参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源代码管理配置（Source-Code-Management"><span class="nav-number">5.3.</span> <span class="nav-text">源代码管理配置（Source Code Management)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建触发器配置（Build-Triggers）"><span class="nav-number">5.4.</span> <span class="nav-text">构建触发器配置（Build Triggers）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置-gitlab-的-webhook"><span class="nav-number">5.4.1.</span> <span class="nav-text">配置 gitlab 的 webhook</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建环境配置（Build-Environment）"><span class="nav-number">5.5.</span> <span class="nav-text">构建环境配置（Build Environment）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建配置（Build"><span class="nav-number">5.6.</span> <span class="nav-text">构建配置（Build)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署到服务端配置（Post-build-Actions"><span class="nav-number">5.7.</span> <span class="nav-text">部署到服务端配置（Post-build Actions)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">My Wei</p>
+  <div class="site-description" itemprop="description">这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">My Wei</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
