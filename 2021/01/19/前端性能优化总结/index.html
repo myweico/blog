@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/ming-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/ming-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/ming-16.png">
+  <link rel="mask-icon" href="/blog/images/ming-180.png" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"myweico.github.io","root":"/blog/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="性能优化是前端的一个大课题，优化得当的话可以为公司节省宽带费用，也能给用户带来良好的用户体验。下面是个人优化方案的一些总结，主要涵盖下面几个方面：  图片优化 缓存优化 打包优化 网络优化 体验优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端性能优化总结">
+<meta property="og:url" content="https://myweico.github.io/blog/2021/01/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="My Wei 的博客">
+<meta property="og:description" content="性能优化是前端的一个大课题，优化得当的话可以为公司节省宽带费用，也能给用户带来良好的用户体验。下面是个人优化方案的一些总结，主要涵盖下面几个方面：  图片优化 缓存优化 打包优化 网络优化 体验优化">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-19T10:53:10.000Z">
+<meta property="article:modified_time" content="2021-02-01T16:23:18.618Z">
+<meta property="article:author" content="My Wei">
+<meta property="article:tag" content="css">
+<meta property="article:tag" content="html">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="network">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://myweico.github.io/blog/2021/01/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>前端性能优化总结 | My Wei 的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">My Wei 的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">享受共同成长的过程。</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/01/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="name" content="My Wei">
+      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="My Wei 的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端性能优化总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-19 10:53:10" itemprop="dateCreated datePublished" datetime="2021-01-19T10:53:10+00:00">2021-01-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-01 16:23:18" itemprop="dateModified" datetime="2021-02-01T16:23:18+00:00">2021-02-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" itemprop="url" rel="index">
+                    <span itemprop="name">前端性能优化</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>性能优化是前端的一个大课题，优化得当的话可以为公司节省宽带费用，也能给用户带来良好的用户体验。下面是个人优化方案的一些总结，主要涵盖下面几个方面：</p>
+<ul>
+<li>图片优化</li>
+<li>缓存优化</li>
+<li>打包优化</li>
+<li>网络优化</li>
+<li>体验优化</li>
+</ul>
+<a id="more"></a>
+
+<h2 id="图片优化"><a href="#图片优化" class="headerlink" title="图片优化"></a>图片优化</h2><h3 id="使用-webp-格式的图片"><a href="#使用-webp-格式的图片" class="headerlink" title="使用 webp 格式的图片"></a>使用 webp 格式的图片</h3><p>webp 是谷歌提出的一种新的图片文件格式。在与 JPEG 同等图片质量下，却占用了更小的体积。</p>
+<p>可以使用对象存储的图片样式，将图片转为 webp 格式引入。（需要考虑兼容性）</p>
+<h3 id="采用恰当尺寸的图片"><a href="#采用恰当尺寸的图片" class="headerlink" title="采用恰当尺寸的图片"></a>采用恰当尺寸的图片</h3><p>若一个商品详略图的尺寸为 <code>100 × 100</code>，那就没必要使用超过这个尺寸的图片，可以通过对象存储的图片的url 进行图片处理(参考各家对象存储图片处理文档），阿里云的处理则如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;image-demo.oss-cn-hangzhou.aliyuncs.com&#x2F;example.jpg?x-oss-process&#x3D;image&#x2F;resize,w_100&#x2F;quality,q_90</span><br></pre></td></tr></table></figure>
+<p>将图片等比例缩放到宽为100px，图片质量调整到 90%</p>
+<h3 id="使用cdn"><a href="#使用cdn" class="headerlink" title="使用cdn"></a>使用cdn</h3><h3 id="将图片转为base64-使用精灵图"><a href="#将图片转为base64-使用精灵图" class="headerlink" title="将图片转为base64/使用精灵图"></a>将图片转为base64/使用精灵图</h3><p>可以将尺寸比较小的图片转为base64格式引入（可通过webpack配置）</p>
+<p>若有数量上比较多并且出现频率比较多的小图标，可以考虑将小图片合在一起制作成精灵图，通过精灵图显示图片</p>
+<p>以上两个步骤都能够减少 http 请求</p>
+<h3 id="图片懒加载"><a href="#图片懒加载" class="headerlink" title="图片懒加载"></a>图片懒加载</h3><p>若一次性都加载所有图片的话，占用网络资源，也没必要</p>
+<p>可以在浏览视窗内，才开始加载图片，可以减少首屏图片请求</p>
+<p>可以使用比较成熟的库，进行图片懒加载</p>
+<h2 id="静态资源"><a href="#静态资源" class="headerlink" title="静态资源"></a>静态资源</h2><ul>
+<li>prefetch/preload</li>
+<li>service worker</li>
+<li>mianfest</li>
+<li>pwa</li>
+<li>http2 push</li>
+</ul>
+<h2 id="缓存优化"><a href="#缓存优化" class="headerlink" title="缓存优化"></a>缓存优化</h2><h3 id="使用-service-worker"><a href="#使用-service-worker" class="headerlink" title="使用 service worker"></a>使用 service worker</h3><h3 id="webpack-优化"><a href="#webpack-优化" class="headerlink" title="webpack 优化"></a>webpack 优化</h3><h4 id="打包公共的代码"><a href="#打包公共的代码" class="headerlink" title="打包公共的代码"></a>打包公共的代码</h4><p>将一些公用的，频繁引入，但不会经常变化的文件合成到一个文件里面，例如一些常用的库，它被多个页面频繁引用，并且不会经常改变，因此可以使用 webpack 的 splitChunks 将多次引入的包都打包到一个文件里面，这样的文件在第二次加载的时候就可以直接从缓存中获取，而不是通过网络获取</p>
+<h4 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h4><p>在单页面中，可以对引入的路由进行分包，那么在加载这个路由对应的页面的时候，才会加载对应的资源包</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>(<span class="comment">/*webpackChunkName: 'xx'* 'yourpath'/)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="构建优化"><a href="#构建优化" class="headerlink" title="构建优化"></a>构建优化</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><ul>
+<li>生成包使用内容hash进行缓存，若内容不变，使用缓存，内容变化则直接请求新的文件</li>
+<li>提取css从js中提取出来，方便缓存</li>
+<li>图片、字体等文件使用 url-loader，小于某个阈值的静态资源文件转为 base64 格式引入，减少网络请求，压缩图片尺寸等</li>
+<li>使用压缩插件，对js文件以及css文件进行压缩</li>
+</ul>
+<h3 id="tree-shaking"><a href="#tree-shaking" class="headerlink" title="tree shaking"></a>tree shaking</h3><p>减少无用代码</p>
+<h3 id="preload-prefetch加载"><a href="#preload-prefetch加载" class="headerlink" title="preload/prefetch加载"></a>preload/prefetch加载</h3><h3 id="基于路由进行代码分割"><a href="#基于路由进行代码分割" class="headerlink" title="基于路由进行代码分割"></a>基于路由进行代码分割</h3><h3 id="nginx-缓存，gzip压缩"><a href="#nginx-缓存，gzip压缩" class="headerlink" title="nginx 缓存，gzip压缩"></a>nginx 缓存，gzip压缩</h3><h3 id="接入层缓存"><a href="#接入层缓存" class="headerlink" title="接入层缓存"></a>接入层缓存</h3><ul>
+<li>接入层接口根据方法以及参数从redis里面判断是否有缓存，有缓存则直接返回</li>
+<li>获取到结果之后，设置缓存，过期时间需要有一个随机数，避免缓存击穿</li>
+</ul>
+<h3 id="客户端缓存（根据接口和参数缓存）"><a href="#客户端缓存（根据接口和参数缓存）" class="headerlink" title="客户端缓存（根据接口和参数缓存）"></a>客户端缓存（根据接口和参数缓存）</h3><p>缓存策略：</p>
+<ul>
+<li>优先从本地缓存获取，当本地缓存过期或不存在的时候才从服务器获取，获取后更新本地缓存</li>
+<li>优先从服务器获取，当网络请求不同的时候才从本地获取，服务器获取后也会更新本地缓存</li>
+<li>同时从本地和服务器获取，先显示 本地的缓存，获取到服务器的数据后，显示服务器的数据并且更新本地缓存</li>
+</ul>
+<h2 id="优化网络链接"><a href="#优化网络链接" class="headerlink" title="优化网络链接"></a>优化网络链接</h2><h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><h3 id="静态资源分域存放增加下载并发数"><a href="#静态资源分域存放增加下载并发数" class="headerlink" title="静态资源分域存放增加下载并发数"></a>静态资源分域存放增加下载并发数</h3><h3 id="DNS预解析"><a href="#DNS预解析" class="headerlink" title="DNS预解析"></a>DNS预解析</h3><h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blog/tags/css/" rel="tag"># css</a>
+              <a href="/blog/tags/html/" rel="tag"># html</a>
+              <a href="/blog/tags/JavaScript/" rel="tag"># JavaScript</a>
+              <a href="/blog/tags/network/" rel="tag"># network</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2021/01/09/docker%E6%90%AD%E5%BB%BAgitlabi%E8%AE%B0%E5%BD%95/" rel="prev" title="docker搭建gitlab记录">
+      <i class="fa fa-chevron-left"></i> docker搭建gitlab记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2021/02/02/%E6%89%8B%E6%92%B8Promise-%E5%AE%9E%E7%8E%B0Promise-A-%E8%A7%84%E8%8C%83/" rel="next" title="手撸Promise,实现Promise A+规范">
+      手撸Promise,实现Promise A+规范 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#图片优化"><span class="nav-number">1.</span> <span class="nav-text">图片优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-webp-格式的图片"><span class="nav-number">1.1.</span> <span class="nav-text">使用 webp 格式的图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#采用恰当尺寸的图片"><span class="nav-number">1.2.</span> <span class="nav-text">采用恰当尺寸的图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用cdn"><span class="nav-number">1.3.</span> <span class="nav-text">使用cdn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将图片转为base64-使用精灵图"><span class="nav-number">1.4.</span> <span class="nav-text">将图片转为base64&#x2F;使用精灵图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片懒加载"><span class="nav-number">1.5.</span> <span class="nav-text">图片懒加载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态资源"><span class="nav-number">2.</span> <span class="nav-text">静态资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存优化"><span class="nav-number">3.</span> <span class="nav-text">缓存优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-service-worker"><span class="nav-number">3.1.</span> <span class="nav-text">使用 service worker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-优化"><span class="nav-number">3.2.</span> <span class="nav-text">webpack 优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#打包公共的代码"><span class="nav-number">3.2.1.</span> <span class="nav-text">打包公共的代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#按需加载"><span class="nav-number">3.2.2.</span> <span class="nav-text">按需加载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建优化"><span class="nav-number">4.</span> <span class="nav-text">构建优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存"><span class="nav-number">4.1.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tree-shaking"><span class="nav-number">4.2.</span> <span class="nav-text">tree shaking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#preload-prefetch加载"><span class="nav-number">4.3.</span> <span class="nav-text">preload&#x2F;prefetch加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于路由进行代码分割"><span class="nav-number">4.4.</span> <span class="nav-text">基于路由进行代码分割</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx-缓存，gzip压缩"><span class="nav-number">4.5.</span> <span class="nav-text">nginx 缓存，gzip压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接入层缓存"><span class="nav-number">4.6.</span> <span class="nav-text">接入层缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端缓存（根据接口和参数缓存）"><span class="nav-number">4.7.</span> <span class="nav-text">客户端缓存（根据接口和参数缓存）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化网络链接"><span class="nav-number">5.</span> <span class="nav-text">优化网络链接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CDN"><span class="nav-number">5.1.</span> <span class="nav-text">CDN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态资源分域存放增加下载并发数"><span class="nav-number">5.2.</span> <span class="nav-text">静态资源分域存放增加下载并发数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS预解析"><span class="nav-number">5.3.</span> <span class="nav-text">DNS预解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.4.</span> <span class="nav-text"></span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">My Wei</p>
+  <div class="site-description" itemprop="description">这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">My Wei</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
