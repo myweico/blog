@@ -4,6 +4,8 @@ date: 2020-12-23 23:48:35
 tags:
   - 算法
   - JavaScript
+categories:
+- JavaScript
 ---
 
 常用的 JavaScript 方法。
@@ -573,3 +575,138 @@ function throttle(fn, interval, context) {
   };
 }
 ```
+
+## 原生 api 的实现
+
+### bind
+
+```js
+Function.prototype.myBind = (context, ...argsBind) => {
+  return (...argsPass) => {
+    this.apply(context, [...argsBind, ...argsPass]);
+  };
+};
+```
+
+### call
+
+```js
+Function.prototype.myCall = function (context, ...args) {
+  const __randomKey = Math.random().toString().slice(2);
+  context[__randomKey] = this;
+  const result = context[__randomKey](...args);
+  delete context[__randomKey];
+  return result;
+};
+```
+
+### apply
+
+```js
+Function.prototype.myApply = function (context, args) {
+  const __randomKey = Math.random().toString().slice(2);
+  context[__randomKey] = this;
+  const result = context[__randomKey](...args);
+  delete context[__randomKey];
+  return result;
+};
+
+var a = 1;
+var obj = {
+  a: 2,
+};
+let func = function (args) {
+  console.log("args: ", args);
+  console.log("this.a is: ", this.a);
+};
+
+func("global.a");
+func.myApply(obj, ["obj.a"]);
+```
+
+### instanceof
+
+```js
+function myInstanceOf(child, parent) {
+  while (child.__proto__) {
+    if (child.__proto__.constructor === parent) {
+      return true;
+    }
+    child = child.__proto__;
+  }
+  return false;
+}
+
+myInstanceOf([], Array);
+```
+
+### new
+
+```js
+function myNew(consFunc, ...args) {
+  // 构造函数四步
+
+  // 创建一个对象
+  const _newObj = {};
+
+  // 将创建对象的 prototype 设置为该构造函数的  prototype
+  _newObj.__proto__ = consFunc.prototype;
+
+  // 在这个对象上执行构造函数
+  const result = consFunc.apply(_newObj, args);
+
+  // 若执行构造函数返回一个对象，则返回该对象，否则返回创建的对象;
+  return typeof result === "object" ? result : _newObj;
+}
+```
+
+### reduce()
+
+```js
+Array.prototype.myReduce = (func, init) => {
+  // 接受一个函数，以及一个初始值
+
+  // 若有初始值，则从数组的第一个数值开始
+  // 若没有初始值，则初始值就是第一个元素，后续从数组的第二个元素开始
+  const hasInit = init !== undefined
+  init = init || this[0];
+  // 每次都执行函数，将函数的结果赋值给init
+  for(let i = hasInit ? 0 : 1; i < this.length i++) {
+    init = func(init, this[i], i, this);
+  }
+  return init;
+}
+```
+
+### forEach()
+
+```js
+Array.prototype.myForEach = (func) => {
+  for (let i = 0; i < this.length; i++) {
+    func(this[i], i, this);
+  }
+};
+```
+
+### isArray()
+
+```js
+Array.myIsArray = (elem) => {
+  return Object.prototype.toString.apply(elem).slice(8, -1) === "Array";
+  // return Object.prototype.toString.apply(elem).toLowerCase() === "[object array]";
+};
+```
+
+### sleep()
+
+```js
+function sleep(time) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, time);
+  });
+}
+```
+
+### Promise()
