@@ -21,6 +21,9 @@ categories:
 - [官网文档](https://zh-hans.reactjs.org/docs/react-component.html)
 - [生命周期图谱](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)
 
+## 运行demo
+参考我的 github 上的 [react-lifecycle-demo](https://github.com/myweico/react-lifecycle-demo)
+
 ## React 的生命周期变化
 ### React 16 前
 生命周期有：
