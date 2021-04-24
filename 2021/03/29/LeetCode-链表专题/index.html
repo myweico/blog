@@ -20,32 +20,40 @@
     var CONFIG = {"hostname":"myweico.github.io","root":"/blog/","scheme":"Gemini","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-<meta property="og:type" content="website">
-<meta property="og:title" content="My Wei 的博客">
-<meta property="og:url" content="https://myweico.github.io/blog/index.html">
+  <meta name="description" content="链表有环LeetCode 141：判断链表是否有环题目给定一个链表，判断链表中是否有环。 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。 如果链表中存在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 链表专题">
+<meta property="og:url" content="https://myweico.github.io/blog/2021/03/29/LeetCode-%E9%93%BE%E8%A1%A8%E4%B8%93%E9%A2%98/index.html">
 <meta property="og:site_name" content="My Wei 的博客">
-<meta property="og:description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
+<meta property="og:description" content="链表有环LeetCode 141：判断链表是否有环题目给定一个链表，判断链表中是否有环。 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。 如果链表中存在">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210318082318.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210318082414.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210318082443.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210320175606.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210329001844.png">
+<meta property="og:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210329001934.png">
+<meta property="article:published_time" content="2021-03-29T00:23:02.000Z">
+<meta property="article:modified_time" content="2021-04-24T16:10:16.765Z">
 <meta property="article:author" content="My Wei">
-<meta property="article:tag" content="weimingye">
-<meta property="article:tag" content=" wei mingye">
-<meta property="article:tag" content=" blog">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="LeetCode">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog-1257268092.cos.ap-guangzhou.myqcloud.com/notes/20210318082318.png">
 
-<link rel="canonical" href="https://myweico.github.io/blog/">
+<link rel="canonical" href="https://myweico.github.io/blog/2021/03/29/LeetCode-%E9%93%BE%E8%A1%A8%E4%B8%93%E9%A2%98/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false
+    isHome: false,
+    isPost: true
   };
 </script>
 
-  <title>My Wei 的博客</title>
+  <title>LeetCode 链表专题 | My Wei 的博客</title>
   
 
 
@@ -176,10 +184,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/03/29/LeetCode-%E9%93%BE%E8%A1%A8%E4%B8%93%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -193,8 +201,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2021/03/29/LeetCode-%E9%93%BE%E8%A1%A8%E4%B8%93%E9%A2%98/" class="post-title-link" itemprop="url">LeetCode 链表专题</a>
+          LeetCode 链表专题
         </h1>
 
         <div class="post-meta">
@@ -225,7 +232,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <a id="more"></a>
+        <a id="more"></a>
 
 <h2 id="链表有环"><a href="#链表有环" class="headerlink" title="链表有环"></a>链表有环</h2><h3 id="LeetCode-141：判断链表是否有环"><a href="#LeetCode-141：判断链表是否有环" class="headerlink" title="LeetCode 141：判断链表是否有环"></a><a href="https://leetcode-cn.com/problems/linked-list-cycle/" target="_blank" rel="noopener">LeetCode 141：判断链表是否有环</a></h3><h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>给定一个链表，判断链表中是否有环。</p>
 <p>如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。</p>
@@ -359,756 +366,37 @@
 </ul>
 <p>什么时候使用虚拟头：<br>若头地址有可能发生改变的时候一般使用虚拟头地址</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/blog/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/blog/tags/LeetCode/" rel="tag"># LeetCode</a>
+          </div>
 
         
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/02/20/JavaScript%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%80%BB%E7%BB%93/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2021/02/20/JavaScript%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">JavaScript类型转换总结</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-02-20 21:20:10" itemprop="dateCreated datePublished" datetime="2021-02-20T21:20:10+00:00">2021-02-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>你知道 <code>[] != ![]</code> 的结果吗，结果是 true，你知道为什么吗？看完这篇你就知道了。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/02/20/JavaScript%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%80%BB%E7%BB%93/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2021/02/20/JavaScript%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%80%BB%E7%BB%93/" rel="prev" title="JavaScript类型转换总结">
+      <i class="fa fa-chevron-left"></i> JavaScript类型转换总结
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/02/14/React-Hook%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2021/02/14/React-Hook%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">React Hook使用详解</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-02-14 23:32:55" itemprop="dateCreated datePublished" datetime="2021-02-14T23:32:55+00:00">2021-02-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index">
-                    <span itemprop="name">前端框架</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>React Hook 是 React16.8 推出的新特性，给我们带来了许多的新特性。这篇主要讲解 React Hook 的使用以及 React Hook 的底层原理。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/02/14/React-Hook%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/02/10/React-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2021/02/10/React-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">React 生命周期详解</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-02-10 16:10:08" itemprop="dateCreated datePublished" datetime="2021-02-10T16:10:08+00:00">2021-02-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index">
-                    <span itemprop="name">前端框架</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>组件有不同的生命周期，也就是有不同的阶段。通过生命周期方法，我们可以指定在不同阶段的行为。</p>
-<p>比如：</p>
-<ul>
-<li>在组件挂载后，请求网络数据、订阅数据，设置定时器等。</li>
-<li>在组件更新前，通过判断 props 或者 state 控制组件是否更新，从而实现性能优化。</li>
-<li>在组件卸载销毁前，清理定时器，取消数据的订阅。</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/02/10/React-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E8%AF%A6%E8%A7%A3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/02/02/%E6%89%8B%E6%92%B8Promise-%E5%AE%9E%E7%8E%B0Promise-A-%E8%A7%84%E8%8C%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2021/02/02/%E6%89%8B%E6%92%B8Promise-%E5%AE%9E%E7%8E%B0Promise-A-%E8%A7%84%E8%8C%83/" class="post-title-link" itemprop="url">手撸Promise,实现Promise A+规范</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-02-02 00:10:23" itemprop="dateCreated datePublished" datetime="2021-02-02T00:10:23+00:00">2021-02-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Promise 是 JavaScript 中描述了异步操作过程，是解决 JavaScript 回调地狱的一个很好的途径。也是我们开发经常用到的东西。</p>
-<p>为了更深入的了解一下 Promise，这篇文章就让我们来手写一下 Promise 以及实现es6中常用的api，其实现要求符合 Promise A+ 规范。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/02/02/%E6%89%8B%E6%92%B8Promise-%E5%AE%9E%E7%8E%B0Promise-A-%E8%A7%84%E8%8C%83/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/01/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2021/01/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">前端性能优化总结</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-19 10:53:10" itemprop="dateCreated datePublished" datetime="2021-01-19T10:53:10+00:00">2021-01-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" itemprop="url" rel="index">
-                    <span itemprop="name">前端性能优化</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>性能优化是前端的一个大课题，优化得当的话可以为公司节省宽带费用，也能给用户带来良好的用户体验。下面是个人优化方案的一些总结，主要涵盖下面几个方面：</p>
-<ul>
-<li>图片优化</li>
-<li>缓存优化</li>
-<li>打包优化</li>
-<li>网络优化</li>
-<li>体验优化</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/01/19/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%BB%E7%BB%93/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/01/09/docker%E6%90%AD%E5%BB%BAgitlabi%E8%AE%B0%E5%BD%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2021/01/09/docker%E6%90%AD%E5%BB%BAgitlabi%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">docker搭建gitlab记录</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-09 22:38:22" itemprop="dateCreated datePublished" datetime="2021-01-09T22:38:22+00:00">2021-01-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>gitlab 是大多数公司代码管理的工具。之前也很好奇gitlab是怎么搭建的，这次尝试了使用docker搭建gitlab,其中也踩了不少的坑。大家照着我这个过程搭建应该不是什么问题。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/01/09/docker%E6%90%AD%E5%BB%BAgitlabi%E8%AE%B0%E5%BD%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2021/01/09/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2021/01/09/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" class="post-title-link" itemprop="url">Jenkins自动化部署前端项目实战</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-09 12:03:53" itemprop="dateCreated datePublished" datetime="2021-01-09T12:03:53+00:00">2021-01-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在早期，我部署项目的过程是，现在本地打好包，然后连同 dist 文件夹一起推到 gitlab 上面，然后再登录到服务器上拉取。简单的项目还好，但是若有好几个前端项目，然后项目又分开发、测试、正式环境，那前面的过程就要重复很多遍，效率很低过程也很繁琐。</p>
-<p>因此，就尝试了使用 Jenkins 自动化部署前端项目。弄好了之后，发现真香！效率大大提高，解放双手！舒服！下面记录了我从0到1的过程，还没自动化部署的伙伴们，赶紧试一试！</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2021/01/09/Jenkins%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2020/12/26/JavaScirpt%E5%88%A4%E6%96%AD%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/12/26/JavaScirpt%E5%88%A4%E6%96%AD%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">JavaScirpt判断数据类型方法总结</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-26 15:52:07" itemprop="dateCreated datePublished" datetime="2020-12-26T15:52:07+00:00">2020-12-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>JavaScript经常需要用到数据类型判断，以下是我总结的几种方法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2020/12/26/JavaScirpt%E5%88%A4%E6%96%AD%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://myweico.github.io/blog/2020/12/23/%E5%B8%B8%E7%94%A8%E7%9A%84JavaScript%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
-      <meta itemprop="name" content="My Wei">
-      <meta itemprop="description" content="这里是个人的博客小站。记录了个人的一些学习过程以及技术总结，希望对大家有些帮助。喜欢分享知识，愿意和大家共同成长~">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="My Wei 的博客">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/blog/2020/12/23/%E5%B8%B8%E7%94%A8%E7%9A%84JavaScript%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">常用的JavaScript算法</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-23 23:48:35" itemprop="dateCreated datePublished" datetime="2020-12-23T23:48:35+00:00">2020-12-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-24 16:10:16" itemprop="dateModified" datetime="2021-04-24T16:10:16+00:00">2021-04-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>常用的 JavaScript 方法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/blog/2020/12/23/%E5%B8%B8%E7%94%A8%E7%9A%84JavaScript%E7%AE%97%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
   </article>
   
   
   
 
   </div>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="extend next" rel="next" href="/blog/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
-
 
 
           </div>
@@ -1159,6 +447,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#链表有环"><span class="nav-number">1.</span> <span class="nav-text">链表有环</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-141：判断链表是否有环"><span class="nav-number">1.1.</span> <span class="nav-text">LeetCode 141：判断链表是否有环</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#题目"><span class="nav-number">1.1.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#个人解答："><span class="nav-number">1.1.2.</span> <span class="nav-text">个人解答：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-142：链表寻相遇点"><span class="nav-number">1.2.</span> <span class="nav-text">LeetCode 142：链表寻相遇点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#题目-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#个人解答：-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">个人解答：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-202：快乐数"><span class="nav-number">1.3.</span> <span class="nav-text">LeetCode 202：快乐数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#题目-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#个人解答"><span class="nav-number">1.3.2.</span> <span class="nav-text">个人解答</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链表的反转"><span class="nav-number">2.</span> <span class="nav-text">链表的反转</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-206：反转链表"><span class="nav-number">2.1.</span> <span class="nav-text">LeetCode 206：反转链表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#题目-3"><span class="nav-number">2.1.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#个人解答-1"><span class="nav-number">2.1.2.</span> <span class="nav-text">个人解答</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-92：翻转区间的链表"><span class="nav-number">2.2.</span> <span class="nav-text">LeetCode 92：翻转区间的链表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#题目-4"><span class="nav-number">2.2.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#个人解答-2"><span class="nav-number">2.2.2.</span> <span class="nav-text">个人解答</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-25：k个一组的翻转链表"><span class="nav-number">2.3.</span> <span class="nav-text">LeetCode 25：k个一组的翻转链表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#题目-5"><span class="nav-number">2.3.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#个人解答-3"><span class="nav-number">2.3.2.</span> <span class="nav-text">个人解答</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-61：旋转链表"><span class="nav-number">2.4.</span> <span class="nav-text">LeetCode 61：旋转链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-24：两两交换链表中的节点"><span class="nav-number">2.5.</span> <span class="nav-text">LeetCode 24：两两交换链表中的节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链表节点的删除"><span class="nav-number">3.</span> <span class="nav-text">链表节点的删除</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-19：删除链表倒数的第-N-个节点"><span class="nav-number">3.1.</span> <span class="nav-text">LeetCode 19：删除链表倒数的第 N 个节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-83：删除排序链表中的重复节点"><span class="nav-number">3.2.</span> <span class="nav-text">LeetCode 83：删除排序链表中的重复节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeetCode-82：删除排序排序链表中的重复节点2"><span class="nav-number">3.3.</span> <span class="nav-text">LeetCode 82：删除排序排序链表中的重复节点2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
